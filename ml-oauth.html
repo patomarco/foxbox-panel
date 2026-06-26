@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Autorización Mercado Libre — Foxbox</title>
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--text:#f1f5f9;--muted:#94a3b8;--accent:#facc15;--green:#16a34a}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);
+    display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+  .card{background:var(--card);border-radius:16px;padding:32px;max-width:560px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+  h1{font-size:20px;margin:0 0 4px}.sub{color:var(--muted);font-size:14px;margin-bottom:24px}
+  .code{background:#0b1220;border:2px solid var(--accent);border-radius:12px;padding:18px;font-family:ui-monospace,monospace;
+    font-size:18px;word-break:break-all;margin:8px 0 16px;text-align:center}
+  button{background:var(--accent);color:#0b1220;border:0;border-radius:10px;padding:12px 20px;font-size:15px;
+    font-weight:700;cursor:pointer;width:100%}
+  button:active{transform:scale(.99)}
+  .ok{color:var(--green);font-weight:700;margin-top:12px;text-align:center;min-height:20px}
+  .err{color:#f87171;font-size:14px}.step{color:var(--muted);font-size:13px;margin-top:18px;line-height:1.5}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>✅ Autorización recibida</h1>
+    <div class="sub">Mercado Libre · Foxbox — comparador Ecoflow</div>
+    <div id="box">
+      <div class="sub">Tu código de autorización es:</div>
+      <div class="code" id="code">—</div>
+      <button onclick="copiar()">📋 Copiar código</button>
+      <div class="ok" id="ok"></div>
+      <div class="step">Pegáselo a Claude (o corré <code>node scripts/ml-oauth.js exchange &lt;código&gt;</code>).
+        El código vence en ~10 minutos.</div>
+    </div>
+  </div>
+<script>
+  const p = new URLSearchParams(location.search);
+  const code = p.get('code'), err = p.get('error');
+  const el = document.getElementById('code');
+  if (code) { el.textContent = code; }
+  else { el.textContent = err ? ('error: ' + err) : 'No llegó ningún código en la URL'; el.classList.add('err'); }
+  function copiar(){
+    if(!code) return;
+    navigator.clipboard.writeText(code).then(()=>{document.getElementById('ok').textContent='Copiado ✓';});
+  }
+</script>
+</body>
+</html>
